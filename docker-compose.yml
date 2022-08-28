@@ -1,0 +1,38 @@
+# docker-compose.yml
+# On first run, make sure DB_PASSWORD and LOCATION_IQ_API_KEY environment variables are set
+services:
+  monica:
+    container_name: monica-monica
+    image: monica:latest
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - type: volume
+        source: monica-data
+        target: /var/www/html/storage
+    networks:
+      - monica
+    ports:
+      - "127.0.0.1:80:80"
+  mysql:
+    container_name: monica-mysql
+    image: mysql:latest
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: mysql-data
+        target: /var/lib/mysql
+    networks:
+      - monica
+
+volumes:
+  monica-data:
+    name: monica-monica-data
+    external: true
+  mysql-data:
+    name: monica-mysql-data
+    external: true
+
+networks:
+  monica:
+    name: monica
